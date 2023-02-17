@@ -1,0 +1,35 @@
+#include<iostream>
+#define file_h
+using namespace std;
+int main(){
+    string s="FILE";
+    cout<<s<<"\n";
+    //kernal version
+    cout<<"kernel version:\n";
+    system("cat /proc/version|awk '{ print $1,$2,$3 }' ");
+    //processor type
+    cout<<"processor type:\n";
+    system("cat /proc/cpuinfo |grep -m 1 'model name' |awk 'BEGIN {" "} {for(i=4;i<=NF;i++) printf $i}' ");
+    //memory allocated
+    cout<<"\nmem allocated:\n";
+    system("cat /proc/meminfo |grep 'MemTotal' |awk 'BEGIN {" "} {for(i=2;i<=NF;i++) printf $i}'");
+    //amount of time since the system was last booted
+    cout<<"\nAmount of time since the system was last booted:\n";
+    system("cat /proc/uptime|awk '{print $1}'");
+    //system("last reboot|head -1 |awk 'BEGIN {" "} {for(i=5;i<=NF;i++) printf $i}' ");
+    cout<<"\n";
+    cout<<"---------------------------";
+    //user mode system mode kernel mode
+    cout<<"processor(s) spend in user mode \t processor(s) spend in system mode \t processor(s) spend in idle mode";
+    cout<<"\n";
+    system("timeout --foreground 1s top|grep %Cpu|awk '{print $2,$4,$8}' ");
+    //percentage
+    cout<<"\n amount and percentage of available (or free) memory\n";
+    for(int i=0;i<=10;i++){
+        system("free | grep Mem | awk '{print $4/$2 * 100.0}' ");
+    }
+    //context switches
+    cout<<"rate of context switches in the kernel";
+    cout<<"\n";
+    system("vmstat 1 1|grep 1|awk '{print $12}' ");
+}
